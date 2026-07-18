@@ -75,5 +75,34 @@ function recursivelyFindSongsByExtension(base: string, extension: string): Song[
   return res
 }
 
+function assertThatAllIdsAreUnique(songs: Song[]) {
+  var ids = songs.map((song) => song.id)
+  const uniqueIds = new Set(ids)
+  if (uniqueIds.size === songs.length) {
+    return
+  }
+  // find the ids that exist multiple times
+  var o = ids.reduce((o, n) => {
+    n in o ? o[n] += 1 : o[n] = 1
+    return o
+  }, {} as Record<number, number>)
+  var duplicateIds = Object.keys(o)
+    .map((k) => Number.parseInt(k))
+    .filter(k => o[k] > 1)
+    .toSorted()
+
+  // construct the error message
+  let res = ''
+  duplicateIds.forEach((id) => {
+    res += `Multiple songs with ID=${id} were found:\n`
+    songs.filter((song) => song.id === id).forEach((song) => {
+      res += `  - ${song.lyrics}\n`
+    })
+  })
+  // trim off the stray newline
+  throw new Error(res.trim())
+}
+
 const songs = recursivelyFindSongsByExtension('public/songs', 'txt')
+assertThatAllIdsAreUnique(songs)
 writeFileSync('src/songinfo.json', JSON.stringify(songs, null, 4))
