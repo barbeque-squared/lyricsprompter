@@ -1,4 +1,4 @@
-import { readdirSync, readFileSync, statSync, writeFileSync } from "node:fs"
+import { existsSync, readdirSync, readFileSync, statSync, writeFileSync } from "node:fs"
 import { join, resolve } from 'node:path'
 
 // duplicated from src/types/Song because node doesn't like the import
@@ -60,6 +60,14 @@ function recursivelyFindSongsByExtension(base: string, extension: string): Song[
       } else if (audio === null) {
         console.warn(`Cannot find audio in ${path}`)
         return
+      } else if (!existsSync(`public${audio}`)) {
+        console.warn(`Cannot find audio file 'public${audio}' referenced in ${path}`)
+        return
+      }
+      // check that the path is actually file and not a directory
+      const audioinfo = statSync(`public${audio}`)
+      if (!audioinfo.isFile()) {
+        console.warn(`Audio file 'public${audio}' referenced in ${path} does not look like a file`)
       }
       res.push({ id, artist, title, year, lyrics, audio})
     }
