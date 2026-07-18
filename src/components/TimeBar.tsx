@@ -35,7 +35,7 @@ export const TimeBar = (props: { lyricsInfo: LyricsInfo[], duration: number, cur
                 <rect
                     x={sentence.start}
                     y={HEIGHT}
-                    width={sentence.duration}
+                    width={sentence.duration - 0.5}
                     height={HEIGHT}
                     fill='white'
                 />
