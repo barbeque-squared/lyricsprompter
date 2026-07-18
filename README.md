@@ -63,3 +63,8 @@ this will be shown until the end of the song
 
 Everything else is up to you!
 Some people want to have it scroll by sentence by sentence, others prefer blocks.
+
+A very limited amount of markup is supported:
+* a line surrounded by `***` or `___` will be bold+italics
+* a line surrounded by `**` or `__` will be bold
+* a line surrounded by `*` or `_` will be italics
