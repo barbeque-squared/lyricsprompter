@@ -19,6 +19,9 @@
   margin: 1.2vmin 0;
   min-height: 3vh;
 }
+.SongPage .Lyrics p.nextLyrics {
+  color: grey;
+}
 
 .SongPage .Audio {
   flex-grow: 0;

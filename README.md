@@ -54,8 +54,9 @@ Timestamps can also have decimals, eg 0:15.5 or 0:15.563
 
 0:30
 This is the third block
-It will only become visible at 30 seconds
-Between 15 and 30 seconds, the screen is blank
+Between 15 and 30 seconds, it will be shown in grey.
+At 30 seconds, it will become white
+and directly following blocks also shown.
 Because there is no final timestamp,
 this will be shown until the end of the song
 ```

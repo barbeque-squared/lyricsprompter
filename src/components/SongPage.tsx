@@ -85,6 +85,25 @@ export const SongPage = (props: { song: Song, lyrics: string, state: AudioState 
         return res
     }
 
+    // if the current text is empty, find the first non-empty text and return that
+    // it will be displayed in grey
+    function nextLyrics(): string {
+        const startIndex = currentLyricsInfoIndex()
+        let currentText = lyricsInfo.at(startIndex)?.text ?? 'nonempty'
+        if (currentText !== '') {
+            // return empty text because there are already relevantLyrics
+            return ''
+        }
+        for (let i = startIndex + 1; i < lyricsInfo.length; i++) {
+            const nextText = lyricsInfo[i].text
+            if (nextText !== '') {
+                return nextText
+            }
+        }
+        // there are no nodes after this, return empty
+        return ''
+    }
+
     function seek(event: MouseEvent) {
         const width = audiodiv.clientWidth
         if (width < 1) {
@@ -136,8 +155,11 @@ export const SongPage = (props: { song: Song, lyrics: string, state: AudioState 
     return (
         <div class={styles.SongPage}>
             <div class={styles.Lyrics}>
-                {relevantLyrics().split('\n').map((line) => (
+                {relevantLyrics() !== '' && relevantLyrics().split('\n').map((line) => (
                     <p>{formatLine(line)}</p>
+                ))}
+                {nextLyrics() !== '' && nextLyrics().split('\n').map((line) => (
+                    <p class={styles.nextLyrics}>{formatLine(line)}</p>
                 ))}
             </div>
             <div class={styles.Audio} on:click={seek} ref={audiodiv}>
