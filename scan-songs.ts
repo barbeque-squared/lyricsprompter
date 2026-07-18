@@ -48,6 +48,10 @@ function recursivelyFindSongsByExtension(base: string, extension: string): Song[
       if (id === null) {
         console.warn(`Cannot find ID in ${path}`)
         return
+      } else if (id < 0) {
+        throw new Error(`ID must be positive in ${path}, found ${id}`)
+      } else if (id === 0) {
+        throw new Error(`ID is not allowed to be 0 in ${path}`)
       } else if (artist === null) {
         console.warn(`Cannot find artist in ${path}`)
         return
