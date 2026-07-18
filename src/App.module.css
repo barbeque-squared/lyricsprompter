@@ -1,0 +1,32 @@
+body {
+  background-color: black;
+  color: white;
+  font-family: "Arial", sans-serif;
+  margin: 0;
+}
+
+.App {
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+  width: 100%;
+}
+
+.App .GlobalNavigation {
+  flex-grow: 0;
+  width: 300px;
+}
+
+.App .Content {
+  flex: 1;
+}
+
+
+.App footer {
+  margin-top: .5em;
+  text-align: center;
+}
+.App footer a {
+  color: white;
+  text-decoration: underline;
+}

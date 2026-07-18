@@ -1,0 +1,28 @@
+.SongBrowser {
+  flex-grow: 999;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Layout */
+.SongBrowser table {
+  border-collapse: collapse;
+  width: 100%;
+}
+.SongBrowser thead tr th {
+  text-align: left;
+}
+.SongBrowser thead tr th {
+  position: sticky;
+  z-index: 1;
+  top: 0;
+  background-color: #222;
+}
+.SongBrowser tbody tr {
+  border-top: 1px solid #222;
+  background-color: rgba(0, 0, 0, 0.3);
+}
+.SongBrowser tbody tr:hover {
+  background-color: white;
+  color: black;
+}

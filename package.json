@@ -1,0 +1,22 @@
+{
+  "name": "lyricsprompter",
+  "description": "Display lyrics for performing",
+  "type": "module",
+  "scripts": {
+    "prestart": "node scan-songs.ts",
+    "start": "vite",
+    "dev": "vite",
+    "build": "vite build",
+    "serve": "vite preview"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^26.1.1",
+    "typescript": "^7.0.2",
+    "vite": "^8.1.4",
+    "vite-plugin-solid": "^2.11.12"
+  },
+  "dependencies": {
+    "solid-js": "^1.9.14"
+  }
+}

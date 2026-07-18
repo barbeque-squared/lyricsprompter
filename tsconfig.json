@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "compilerOptions": {
+    "module": "esnext",
+    "types": ["vite/client", "node"],
+    "isolatedModules": true,
+    "noEmit": true,
+    "allowImportingTsExtensions": true,
+    "jsx": "preserve",
+    "jsxImportSource": "solid-js",
+    "target": "esnext",
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true
+  }
+}
