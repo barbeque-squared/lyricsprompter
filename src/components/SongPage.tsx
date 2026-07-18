@@ -114,11 +114,30 @@ export const SongPage = (props: { song: Song, lyrics: string, state: AudioState 
         const seconds = rounded - minutes * 60;
         return `${minutes}:${seconds.toString().padStart(2, '0')}`
     }
+
+    function lineStartsAndEndsWithNUnderscoresOrAsterisks(line: string, n: number) {
+        return line.length > 2*n && (
+            (line.startsWith('_'.repeat(n)) && line.endsWith('_'.repeat(n)))
+            || (line.startsWith('*'.repeat(n)) && line.endsWith('*'.repeat(n)))
+        )
+    }
+
+    function formatLine(line: string) {
+        if (lineStartsAndEndsWithNUnderscoresOrAsterisks(line, 3)) {
+            return <b><i>{line.slice(3, -3)}</i></b>
+        } else if (lineStartsAndEndsWithNUnderscoresOrAsterisks(line, 2)) {
+            return <b>{line.slice(2, -2)}</b>
+        } else if (lineStartsAndEndsWithNUnderscoresOrAsterisks(line, 1)) {
+            return <i>{line.slice(1, -1)}</i>
+        }
+        return line
+    }
+
     return (
         <div class={styles.SongPage}>
             <div class={styles.Lyrics}>
                 {relevantLyrics().split('\n').map((line) => (
-                    <p>{line}</p>
+                    <p>{formatLine(line)}</p>
                 ))}
             </div>
             <div class={styles.Audio} on:click={seek} ref={audiodiv}>
