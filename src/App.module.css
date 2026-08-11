@@ -30,3 +30,10 @@ body {
   color: white;
   text-decoration: underline;
 }
+
+.App form input {
+  font-size: 50px;
+  background: black;
+  border: 2px solid white;
+  color: white;
+}
