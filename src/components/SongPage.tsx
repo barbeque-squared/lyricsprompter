@@ -94,14 +94,15 @@ export const SongPage = (props: { song: Song, lyrics: string, state: AudioState 
             // return empty text because there are already relevantLyrics
             return ''
         }
+        const res = []
         for (let i = startIndex + 1; i < lyricsInfo.length; i++) {
             const nextText = lyricsInfo[i].text
-            if (nextText !== '') {
-                return nextText
+            if (nextText === '') {
+                break
             }
+            res.push(nextText)
         }
-        // there are no nodes after this, return empty
-        return ''
+        return res.join('\n\n')
     }
 
     function seek(event: MouseEvent) {
