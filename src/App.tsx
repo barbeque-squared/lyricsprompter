@@ -27,6 +27,7 @@ const App: Component = () => {
     const lyricsXhr = await fetch(song.lyrics)
     // replace CRLF with LF since that's what the rest assumes
     const lyrics = (await lyricsXhr.text()).replaceAll('\r\n', '\n')
+    setCurrentLyrics(null)
     setCurrentLyrics(lyrics)
     setCurrentSong(song)
     input.focus()
