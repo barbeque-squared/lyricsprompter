@@ -100,7 +100,7 @@ const App: Component = () => {
           <SongBrowser songs={songs} loadSong={loadSong} />
         )}
         {currentSong() !== null && currentLyrics() !== null && (
-          <SongPage song={currentSong()!} lyrics={currentLyrics()!} state={audioState()} />
+          <SongPage song={currentSong()!} lyrics={currentLyrics()!} state={audioState()} setAudioState={setAudioState} />
         )}
       </div>
     </div>

@@ -1,11 +1,11 @@
-import {createEffect, createSignal} from "solid-js";
+import {createEffect, createSignal, Setter} from "solid-js";
 import { Song } from "../types/Song";
 import styles from './SongPage.module.css';
 import { LyricsInfo } from "../types/LyricsInfo";
 import { TimeBar } from "./TimeBar";
 import { AudioState } from "../types/AudioState";
 
-export const SongPage = (props: { song: Song, lyrics: string, state: AudioState }) => {
+export const SongPage = (props: { song: Song, lyrics: string, state: AudioState, setAudioState: Setter<AudioState> }) => {
     const [duration, setDuration] = createSignal(0)
     const [currentTime, setCurrentTime] = createSignal(0)
     const [currentLyricsInfoIndex, setCurrentLyricsInfoIndex] = createSignal(0)
@@ -121,10 +121,12 @@ export const SongPage = (props: { song: Song, lyrics: string, state: AudioState 
     }
 
     function togglePlayPause() {
+        // use the setter, otherwise it's impossible to pause from the input box if it was started from a click
+        // by using the setter, it remains synced
         if (audioelem.paused) {
-            audioelem.play()
+            props.setAudioState('play')
         } else {
-            audioelem.pause()
+            props.setAudioState('pause')
         }
     }
 
