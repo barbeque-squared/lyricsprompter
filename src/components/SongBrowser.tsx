@@ -6,14 +6,17 @@ export const SongBrowser = (props: { songs: Song[], loadSong: (song: Song) => Pr
     function sortSongs(key: keyof Song) {
         return props.songs.toSorted((a, b) => a[key].toString().localeCompare(b[key].toString()))
     }
-    const [sortedSongs, setSortedSongs] = createSignal<Song[]>(sortSongs('id'))
+    function sortSongsByID() {
+        return props.songs.toSorted((a, b) => a.id - b.id)
+    }
+    const [sortedSongs, setSortedSongs] = createSignal<Song[]>(sortSongsByID())
 
     return (
         <div class={styles.SongBrowser}>
             <table>
                 <thead>
                     <tr>
-                        <th onclick={() => setSortedSongs(sortSongs('id'))}>ID</th>
+                        <th onclick={() => setSortedSongs(sortSongsByID())}>ID</th>
                         <th onclick={() => setSortedSongs(sortSongs('artist'))}>Artist</th>
                         <th onclick={() => setSortedSongs(sortSongs('title'))}>Title</th>
                         <th onclick={() => setSortedSongs(sortSongs('year'))}>Year</th>
