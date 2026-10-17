@@ -88,7 +88,10 @@ const App: Component = () => {
           '-'
         )}
         {currentSong() !== null && currentLyrics() !== null && (
-          <b>{currentSong()!.title}</b>
+          <>
+            <h1>{currentSong()!.id}</h1>
+            <b>{currentSong()!.title}</b>
+          </>
         )}
         <footer>
           Source: <a href="https://github.com/barbeque-squared/lyricsprompter">https://github.com/barbeque-squared/lyricsprompter</a>

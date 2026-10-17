@@ -17,6 +17,11 @@ body {
   width: 300px;
 }
 
+.App .GlobalNavigation h1 {
+  font-size: 6em;
+  margin: 0;
+}
+
 .App .Content {
   flex: 1;
 }
