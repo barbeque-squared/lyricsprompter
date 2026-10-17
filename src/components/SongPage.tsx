@@ -60,6 +60,9 @@ export const SongPage = (props: {
                 lyricsInfo.push({ timestamp: 0, text: '' })
             }
             firstTimestampFound = true
+        } else if (props.isMonitor && line.startsWith('//')) {
+            // skip comment lines in monitor mode
+            continue
         } else {
             lines.push(line)
         }
