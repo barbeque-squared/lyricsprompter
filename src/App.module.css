@@ -25,6 +25,9 @@ body {
 .App .Content {
   flex: 1;
 }
+.App h1.next {
+  font-size: 4em;
+}
 
 
 .App footer {

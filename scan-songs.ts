@@ -109,4 +109,13 @@ function assertThatAllIdsAreUnique(songs: Song[]) {
 
 const songs = recursivelyFindSongsByExtension('public/songs', 'txt')
 assertThatAllIdsAreUnique(songs)
-writeFileSync('src/songinfo.ts', `export const info = ${JSON.stringify({ songs }, null, 4)}`)
+
+let playlist: string[] = []
+const playlistStat = statSync('public/playlist.txt')
+if (playlistStat.isFile()) {
+  playlist = readFileSync('public/playlist.txt', 'utf-8').replaceAll('\r\n', '\n').split('\n')
+    .map((s) => s.trim())
+    .filter((s) => s.length > 0)
+}
+
+writeFileSync('src/songinfo.ts', `export const info = ${JSON.stringify({ playlist, songs }, null, 4)}`)

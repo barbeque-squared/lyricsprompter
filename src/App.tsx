@@ -14,6 +14,7 @@ const App: Component = () => {
   const [audioState, setAudioState] = createSignal<AudioState>('pause')
   // separate because fetching from here is much easier
   const [currentLyrics, setCurrentLyrics] = createSignal<string | null>(null)
+  const [nextPlaylistId, setNextPlaylistId] = createSignal<string | null>(info.playlist.length > 0 ? info.playlist[0] : null)
 
   function unloadSong() {
     setAudioState('pause')
@@ -30,6 +31,14 @@ const App: Component = () => {
     setCurrentLyrics(null)
     setCurrentLyrics(lyrics)
     setCurrentSong(song)
+    const playlistIndex = info.playlist.indexOf(song.id.toString())
+    if (playlistIndex > -1) {
+      if (info.playlist.length > playlistIndex + 1) {
+        setNextPlaylistId(info.playlist[playlistIndex + 1])
+      } else {
+        setNextPlaylistId(null)
+      }
+    }
     input.focus()
   }
 
@@ -92,6 +101,9 @@ const App: Component = () => {
             <h1>{currentSong()!.id}</h1>
             <b>{currentSong()!.title}</b>
           </>
+        )}
+        {nextPlaylistId() !== null && (
+          <h1 class={styles.next}>next: {nextPlaylistId()}</h1>
         )}
         <footer>
           Source: <a href="https://github.com/barbeque-squared/lyricsprompter">https://github.com/barbeque-squared/lyricsprompter</a>

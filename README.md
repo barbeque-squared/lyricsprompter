@@ -68,3 +68,8 @@ A very limited amount of markup is supported:
 * a line surrounded by `***` or `___` will be bold+italics
 * a line surrounded by `**` or `__` will be bold
 * a line surrounded by `*` or `_` will be italics
+
+## Playlists
+You can create a textfile `public/playlist.txt`.
+The format is simply one song ID per line.
+No error checking is done on this.
