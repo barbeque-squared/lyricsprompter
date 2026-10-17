@@ -9,9 +9,11 @@ import { SongPage } from './components/SongPage';
 import { AudioState } from './types/AudioState';
 
 const App: Component = () => {
+  const bc = new BroadcastChannel('lyricsprompter')
   let input!: HTMLInputElement
   const [currentSong, setCurrentSong] = createSignal<Song | null>(null)
   const [audioState, setAudioState] = createSignal<AudioState>('pause')
+  const [isMonitor, setIsMonitor] = createSignal<boolean>(false)
   // separate because fetching from here is much easier
   const [currentLyrics, setCurrentLyrics] = createSignal<string | null>(null)
   const [nextPlaylistId, setNextPlaylistId] = createSignal<string | null>(info.playlist.length > 0 ? info.playlist[0] : null)
@@ -20,6 +22,9 @@ const App: Component = () => {
     setAudioState('pause')
     setCurrentSong(null)
     setCurrentLyrics(null)
+    if (!isMonitor()) {
+      bc.postMessage({ type: 'unloadsong' })
+    }
     input.focus()
   }
 
@@ -38,6 +43,9 @@ const App: Component = () => {
       } else {
         setNextPlaylistId(null)
       }
+    }
+    if (!isMonitor()) {
+      bc.postMessage({ type: 'loadsong', id: song.id })
     }
     input.focus()
   }
@@ -69,53 +77,76 @@ const App: Component = () => {
     input.value = ''
   }
 
+  function enableMonitor() {
+    setIsMonitor(true)
+    bc.onmessage = (event) => {
+      if (event.data.type === 'unloadsong') {
+        unloadSong()
+      } else if (event.data.type === 'loadsong') {
+        const newSong = info.songs.find((song) => song.id === event.data.id)
+        if (newSong !== undefined) {
+          void loadSong(newSong)
+        }
+      }
+    }
+  }
+
   return (
     <div class={styles.App}>
-      <div class={styles.GlobalNavigation}>
-        <p onclick={unloadSong}><b>Lyricsprompter</b></p>
-        Mouse navigation:
-        <ul>
-          <li>click Lyricsprompter: home</li>
-          <li>click table header: sort</li>
-          <li>click song row: select song</li>
-          <li>click time: play/pause</li>
-        </ul>
-        Input:
-        <ul>
-          <li>0: home</li>
-          <li>song number: select song</li>
-          <li>+ or space: play</li>
-          <li>(empty): pause</li>
-        </ul>
+      {!isMonitor() && (
+        <div class={styles.GlobalNavigation}>
+          <p onclick={unloadSong}><b>Lyricsprompter</b></p>
+          Mouse navigation:
+          <ul>
+            <li>click Lyricsprompter: home</li>
+            <li>click table header: sort</li>
+            <li>click song row: select song</li>
+            <li>click time: play/pause</li>
+          </ul>
+          Input:
+          <ul>
+            <li>0: home</li>
+            <li>song number: select song</li>
+            <li>+ or space: play</li>
+            <li>(empty): pause</li>
+          </ul>
 
-        <form onSubmit={onSubmit}>
-          <input type='text' size={4} pattern='\d+| |\+' ref={input} autofocus />
-        </form>
+          <form onSubmit={onSubmit}>
+            <input type='text' size={4} pattern='\d+| |\+' ref={input} autofocus />
+          </form>
 
-        Current song:<br/>
-        {(currentSong() === null || currentLyrics() === null) && (
-          '-'
-        )}
-        {currentSong() !== null && currentLyrics() !== null && (
-          <>
-            <h1>{currentSong()!.id}</h1>
-            <b>{currentSong()!.title}</b>
-          </>
-        )}
-        {nextPlaylistId() !== null && (
-          <h1 class={styles.next}>next: {nextPlaylistId()}</h1>
-        )}
-        <footer>
-          Source: <a href="https://github.com/barbeque-squared/lyricsprompter">https://github.com/barbeque-squared/lyricsprompter</a>
-        </footer>
-      </div>
+          Current song:<br/>
+          {(currentSong() === null || currentLyrics() === null) && (
+            '-'
+          )}
+          {currentSong() !== null && currentLyrics() !== null && (
+            <>
+              <h1>{currentSong()!.id}</h1>
+              <b>{currentSong()!.title}</b>
+            </>
+          )}
+          {nextPlaylistId() !== null && (
+            <h1 class={styles.next}>next: {nextPlaylistId()}</h1>
+          )}
+          <footer>
+            <p><a onclick={() => enableMonitor()}>Enter monitor mode</a></p>
+            Source: <a href="https://github.com/barbeque-squared/lyricsprompter">https://github.com/barbeque-squared/lyricsprompter</a>
+          </footer>
+        </div>
+      )}
 
       <div class={styles.Content}>
-        {(currentSong() === null || currentLyrics() === null) && (
+        {!isMonitor() && (currentSong() === null || currentLyrics() === null) && (
           <SongBrowser songs={info.songs} loadSong={loadSong} />
         )}
         {currentSong() !== null && currentLyrics() !== null && (
-          <SongPage song={currentSong()!} lyrics={currentLyrics()!} state={audioState()} setAudioState={setAudioState} />
+          <SongPage
+            song={currentSong()!}
+            lyrics={currentLyrics()!}
+            state={audioState()}
+            setAudioState={setAudioState}
+            isMonitor={isMonitor()}
+          />
         )}
       </div>
     </div>

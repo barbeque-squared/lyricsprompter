@@ -73,3 +73,6 @@ A very limited amount of markup is supported:
 You can create a textfile `public/playlist.txt`.
 The format is simply one song ID per line.
 No error checking is done on this.
+
+## Monitor / Audience mode
+`Enter monitor mode` will put the display into a mode where only the current lyrics are shown and nothing else.

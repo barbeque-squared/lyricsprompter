@@ -5,21 +5,38 @@ import { LyricsInfo } from "../types/LyricsInfo";
 import { TimeBar } from "./TimeBar";
 import { AudioState } from "../types/AudioState";
 
-export const SongPage = (props: { song: Song, lyrics: string, state: AudioState, setAudioState: Setter<AudioState> }) => {
+export const SongPage = (props: {
+    song: Song,
+    lyrics: string,
+    state: AudioState,
+    setAudioState: Setter<AudioState>,
+    isMonitor: boolean,
+ }) => {
+    const bc = new BroadcastChannel('lyricsprompter')
     const [duration, setDuration] = createSignal(0)
     const [currentTime, setCurrentTime] = createSignal(0)
     const [currentLyricsInfoIndex, setCurrentLyricsInfoIndex] = createSignal(0)
     // we need the audiodiv for seeking
-    let audiodiv!: HTMLDivElement
-    let audioelem!: HTMLAudioElement
+    let audiodiv!: HTMLDivElement | undefined
+    let audioelem!: HTMLAudioElement | undefined
 
     createEffect(() => {
         if (props.state === 'play') {
-            audioelem.play()
+            audioelem?.play()
         } else {
-            audioelem.pause()
+            audioelem?.pause()
         }
     })
+
+    bc.onmessage = (event) => {
+        if (props.isMonitor && event.data.type === 'timeupdate') {
+            setCurrentTime(event.data.time)
+            const newIndex = lyricsInfo.findLastIndex((info) => info.timestamp <= event.data.time)
+            if (newIndex > -1 && newIndex !== currentLyricsInfoIndex()) {
+                setCurrentLyricsInfoIndex(newIndex)
+            }
+        }
+    }
 
     // always have an empty element at the beginning
     let lyricsInfo: LyricsInfo[] = []
@@ -62,6 +79,9 @@ export const SongPage = (props: { song: Song, lyrics: string, state: AudioState,
         const elem = event.target as HTMLAudioElement
         const newTime = elem.currentTime
         setCurrentTime(newTime)
+        if (!props.isMonitor) {
+            bc.postMessage({ type: 'timeupdate', time: newTime })
+        }
         const newIndex = lyricsInfo.findLastIndex((info) => info.timestamp <= newTime)
         if (newIndex > -1 && newIndex !== currentLyricsInfoIndex()) {
             setCurrentLyricsInfoIndex(newIndex)
@@ -69,9 +89,12 @@ export const SongPage = (props: { song: Song, lyrics: string, state: AudioState,
     }
 
     function relevantLyrics(): string {
+        if (props.isMonitor && currentTime() < 0.01) {
+            return ''
+        }
         const startIndex = currentLyricsInfoIndex()
         let res = lyricsInfo.at(startIndex)?.text ?? ''
-        if (res === '') {
+        if (props.isMonitor || res === '') {
             // return immediately if this is an empty one
             return res
         }
@@ -88,6 +111,10 @@ export const SongPage = (props: { song: Song, lyrics: string, state: AudioState,
     // if the current text is empty, find the first non-empty text and return that
     // it will be displayed in grey
     function nextLyrics(): string {
+        // never in monitor mode
+        if (props.isMonitor) {
+            return ''
+        }
         const startIndex = currentLyricsInfoIndex()
         let currentText = lyricsInfo.at(startIndex)?.text ?? 'nonempty'
         if (currentText !== '') {
@@ -106,6 +133,9 @@ export const SongPage = (props: { song: Song, lyrics: string, state: AudioState,
     }
 
     function seek(event: MouseEvent) {
+        if (audiodiv === undefined || audioelem === undefined) {
+            return
+        }
         const width = audiodiv.clientWidth
         if (width < 1) {
             // ignore
@@ -123,7 +153,7 @@ export const SongPage = (props: { song: Song, lyrics: string, state: AudioState,
     function togglePlayPause() {
         // use the setter, otherwise it's impossible to pause from the input box if it was started from a click
         // by using the setter, it remains synced
-        if (audioelem.paused) {
+        if (audioelem?.paused) {
             props.setAudioState('play')
         } else {
             props.setAudioState('pause')
@@ -165,11 +195,15 @@ export const SongPage = (props: { song: Song, lyrics: string, state: AudioState,
                     <p class={styles.nextLyrics}>{formatLine(line)}</p>
                 ))}
             </div>
-            <div class={styles.Audio} on:click={seek} ref={audiodiv}>
-                <audio src={props.song.audio} onTimeUpdate={onTimeUpdate} onDurationChange={onDurationChange} ref={audioelem} />
-                <TimeBar lyricsInfo={lyricsInfo} duration={duration()} currentTime={currentTime()} />
-            </div>
-            <div class={styles.Time} onclick={togglePlayPause} >{formatTime(currentTime())} / {formatTime(duration())}</div>
+            {!props.isMonitor && (
+                <>
+                    <div class={styles.Audio} on:click={seek} ref={audiodiv}>
+                        <audio src={props.song.audio} onTimeUpdate={onTimeUpdate} onDurationChange={onDurationChange} ref={audioelem} />
+                        <TimeBar lyricsInfo={lyricsInfo} duration={duration()} currentTime={currentTime()} />
+                    </div>
+                    <div class={styles.Time} onclick={togglePlayPause} >{formatTime(currentTime())} / {formatTime(duration())}</div>
+                </>
+            )}
         </div>
     )
 }
