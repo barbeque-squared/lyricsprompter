@@ -109,4 +109,4 @@ function assertThatAllIdsAreUnique(songs: Song[]) {
 
 const songs = recursivelyFindSongsByExtension('public/songs', 'txt')
 assertThatAllIdsAreUnique(songs)
-writeFileSync('src/songinfo.json', JSON.stringify(songs, null, 4))
+writeFileSync('src/songinfo.ts', `export const info = ${JSON.stringify({ songs }, null, 4)}`)

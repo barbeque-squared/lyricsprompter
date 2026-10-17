@@ -4,13 +4,13 @@ import styles from './App.module.css';
 import {createSignal} from "solid-js";
 import {Song} from "./types/Song";
 import { SongBrowser } from "./components/SongBrowser";
-import songs from "./songinfo.json"
+import { info } from "./songinfo"
 import { SongPage } from './components/SongPage';
 import { AudioState } from './types/AudioState';
 
 const App: Component = () => {
   let input!: HTMLInputElement
-  const [currentSong, setCurrentSong] = createSignal<Song | null>(songs[0])
+  const [currentSong, setCurrentSong] = createSignal<Song | null>(null)
   const [audioState, setAudioState] = createSignal<AudioState>('pause')
   // separate because fetching from here is much easier
   const [currentLyrics, setCurrentLyrics] = createSignal<string | null>(null)
@@ -51,7 +51,7 @@ const App: Component = () => {
         if (value === 0) {
           unloadSong()
         } else {
-          const newSong = songs.find((song) => song.id === value)
+          const newSong = info.songs.find((song) => song.id === value)
           if (newSong !== undefined) {
             await loadSong(newSong)
           }
@@ -100,7 +100,7 @@ const App: Component = () => {
 
       <div class={styles.Content}>
         {(currentSong() === null || currentLyrics() === null) && (
-          <SongBrowser songs={songs} loadSong={loadSong} />
+          <SongBrowser songs={info.songs} loadSong={loadSong} />
         )}
         {currentSong() !== null && currentLyrics() !== null && (
           <SongPage song={currentSong()!} lyrics={currentLyrics()!} state={audioState()} setAudioState={setAudioState} />
