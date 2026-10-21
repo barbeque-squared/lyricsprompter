@@ -111,11 +111,14 @@ const songs = recursivelyFindSongsByExtension('public/songs', 'txt')
 assertThatAllIdsAreUnique(songs)
 
 let playlist: string[] = []
-const playlistStat = statSync('public/playlist.txt')
-if (playlistStat.isFile()) {
-  playlist = readFileSync('public/playlist.txt', 'utf-8').replaceAll('\r\n', '\n').split('\n')
-    .map((s) => s.trim())
-    .filter((s) => s.length > 0)
+const playlistfile = 'public/playlist.txt'
+if (existsSync(playlistfile)) {
+  const playlistStat = statSync(playlistfile)
+  if (playlistStat.isFile()) {
+    playlist = readFileSync(playlistfile, 'utf-8').replaceAll('\r\n', '\n').split('\n')
+      .map((s) => s.trim())
+      .filter((s) => s.length > 0)
+  }
 }
 
 writeFileSync('src/songinfo.ts', `export const info = ${JSON.stringify({ playlist, songs }, null, 4)}`)
