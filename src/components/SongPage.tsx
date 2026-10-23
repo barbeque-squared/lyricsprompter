@@ -11,6 +11,7 @@ export const SongPage = (props: {
     state: AudioState,
     setAudioState: Setter<AudioState>,
     isMonitor: boolean,
+    audienceBanner: string,
  }) => {
     const bc = new BroadcastChannel('lyricsprompter')
     const [duration, setDuration] = createSignal(0)
@@ -191,6 +192,9 @@ export const SongPage = (props: {
     return (
         <div class={styles.SongPage}>
             <div class={styles.Lyrics}>
+                {props.isMonitor && props.audienceBanner !== '' && props.audienceBanner.split('\n').map((line) => (
+                    <p>{formatLine(line)}</p>
+                ))}
                 {relevantLyrics() !== '' && relevantLyrics().split('\n').map((line) => (
                     <p>{formatLine(line)}</p>
                 ))}

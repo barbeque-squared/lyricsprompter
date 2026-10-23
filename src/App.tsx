@@ -146,6 +146,7 @@ const App: Component = () => {
             state={audioState()}
             setAudioState={setAudioState}
             isMonitor={isMonitor()}
+            audienceBanner={info.audienceBanner}
           />
         )}
       </div>

@@ -121,4 +121,16 @@ if (existsSync(playlistfile)) {
   }
 }
 
-writeFileSync('src/songinfo.ts', `export const info = ${JSON.stringify({ playlist, songs }, null, 4)}`)
+let audienceBanner = ''
+const audienceBannerFile = 'public/audience-banner.txt'
+if (existsSync(audienceBannerFile)) {
+  const audienceBannerStat = statSync(audienceBannerFile)
+  if (audienceBannerStat.isFile()) {
+    audienceBanner = readFileSync(audienceBannerFile, 'utf-8').replaceAll('\r\n', '\n').split('\n')
+      .map((s) => s.trim())
+      .filter((s) => s.length > 0)
+      .join('\n')
+  }
+}
+
+writeFileSync('src/songinfo.ts', `export const info = ${JSON.stringify({ playlist, songs, audienceBanner }, null, 4)}`)

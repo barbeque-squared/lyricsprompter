@@ -77,3 +77,4 @@ No error checking is done on this.
 ## Monitor / Audience mode
 `Enter monitor mode` will put the display into a mode where only the current lyrics are shown and nothing else.
 Lines starting with `//` will not be shown.
+A message can be shown on all monitor mode windows by creating a `public/audience-banner.txt` file.
