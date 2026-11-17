@@ -53,6 +53,7 @@ Timestamps can also have decimals, eg 0:15.5 or 0:15.563
 0:15
 
 0:30
+// this is a comment only visible to singers
 This is the third block
 Between 15 and 30 seconds, it will be shown in grey.
 At 30 seconds, it will become white
@@ -76,5 +77,4 @@ No error checking is done on this.
 
 ## Monitor / Audience mode
 `Enter monitor mode` will put the display into a mode where only the current lyrics are shown and nothing else.
-Lines starting with `//` will not be shown.
 A message can be shown on all monitor mode windows by creating a `public/audience-banner.txt` file.
