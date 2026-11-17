@@ -3,8 +3,10 @@
   "description": "Display lyrics for performing",
   "type": "module",
   "scripts": {
-    "prestart": "node scan-songs.ts",
+    "scan": "node scan-songs.ts",
+    "prestart": "pnpm run scan",
     "start": "vite",
+    "predev": "pnpm run scan",
     "dev": "vite",
     "build": "vite build",
     "serve": "vite preview"
