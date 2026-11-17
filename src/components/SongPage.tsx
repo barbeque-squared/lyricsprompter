@@ -197,7 +197,7 @@ export const SongPage = (props: {
     }
 
     return (
-        <div class={styles.SongPage}>
+        <div class={`${styles.SongPage} ${props.isMonitor ? styles.Monitor : ''}`}>
             <div class={styles.Lyrics}>
                 {props.isMonitor && props.audienceBanner !== '' && props.audienceBanner.split('\n').map((line) => (
                     <p>{formatLine(line)}</p>

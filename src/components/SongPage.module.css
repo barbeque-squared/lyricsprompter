@@ -37,3 +37,10 @@
   bottom: 25px;
   right: 0;
 }
+
+.SongPage.Monitor .Lyrics {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
