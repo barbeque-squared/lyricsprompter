@@ -60,6 +60,8 @@ At 30 seconds, it will become white
 and directly following blocks also shown.
 Because there is no final timestamp,
 this will be shown until the end of the song
+;except for monitor mode, where it has an extra line and will hide at 0:40
+;0:40
 ```
 
 Everything else is up to you!

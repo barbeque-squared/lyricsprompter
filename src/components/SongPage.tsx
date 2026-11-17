@@ -44,7 +44,14 @@ export const SongPage = (props: {
     let lines: string[] = []
     let firstTimestampFound = false
     let timestamp = 0
-    for (const line of props.lyrics.split('\n')) {
+    for (let line of props.lyrics.split('\n')) {
+        if (line.startsWith(';')) {
+            if (props.isMonitor) {
+                line = line.substring(1)
+            } else {
+                continue
+            }
+        }
         if (line.match(/^\d+:\d+(\.\d+)?$/)) {
             if (firstTimestampFound) {
                 // everything before the first timestamp is ignored
